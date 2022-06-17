@@ -1,4 +1,5 @@
-﻿using Mono.Cecil;
+﻿using Injectors.Loggers;
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
 using System.Collections.Generic;
@@ -27,8 +28,7 @@ namespace Injectors
                 var stopWatchStartRef = module.ImportReference(typeof(Stopwatch).GetMethod("Start", Type.EmptyTypes));
                 var stopWatchStopRef = module.ImportReference(typeof(Stopwatch).GetMethod("Stop", Type.EmptyTypes));
                 var stopWatchElapsedRef = module.ImportReference(typeof(Stopwatch).GetProperty("Elapsed")?.GetMethod);
-                var consoleWriteLineRef =
-                    module.ImportReference(typeof(Console).GetMethod("WriteLine", new[] { typeof(string), typeof(object) }));
+                var consoleWriteLineRef = new ConsoleLogger(module).Reference;
                 var timeSpanRef = module.ImportReference(typeof(TimeSpan));
 
                 foreach (var method in type.Methods)
