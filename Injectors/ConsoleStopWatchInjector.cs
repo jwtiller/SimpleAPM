@@ -8,9 +8,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimpleAPM
+namespace Injectors
 {
-    internal class ConsoleStopWatchInjector
+    public class ConsoleStopWatchInjector
     {
         public void Run(string fileName)
         {
