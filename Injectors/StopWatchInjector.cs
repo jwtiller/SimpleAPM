@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Injectors
 {
-    public class ConsoleStopWatchInjector
+    public class StopWatchInjector : IInjector
     {
-        public void Run(string fileName)
+        public void Build(string fileName, ILogger logger)
         {
             var module = ModuleDefinition.ReadModule(fileName,
                     new ReaderParameters { ReadWrite = true, ReadingMode = ReadingMode.Immediate, InMemory = true });
@@ -28,7 +28,7 @@ namespace Injectors
                 var stopWatchStartRef = module.ImportReference(typeof(Stopwatch).GetMethod("Start", Type.EmptyTypes));
                 var stopWatchStopRef = module.ImportReference(typeof(Stopwatch).GetMethod("Stop", Type.EmptyTypes));
                 var stopWatchElapsedRef = module.ImportReference(typeof(Stopwatch).GetProperty("Elapsed")?.GetMethod);
-                var consoleWriteLineRef = new ConsoleLogger(module).Reference;
+                var loggerRef = logger.Reference(module);
                 var timeSpanRef = module.ImportReference(typeof(TimeSpan));
 
                 foreach (var method in type.Methods)
@@ -56,7 +56,7 @@ namespace Injectors
                         var callStopOpCode = processor.Create(OpCodes.Call, stopWatchStopRef);
                         var ldStrOpCode = processor.Create(OpCodes.Ldstr, $"---Method {method.FullName} took {{0}}");
                         var callElapsedOpcode = processor.Create(OpCodes.Call, stopWatchElapsedRef);
-                        var callWriteLineOpCode = processor.Create(OpCodes.Call, consoleWriteLineRef);
+                        var callWriteLineOpCode = processor.Create(OpCodes.Call, loggerRef);
                         var boxOpcode = processor.Create(OpCodes.Box, timeSpanRef);
 
                         var lastInstruction = processor.Body.Instructions.Last();

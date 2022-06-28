@@ -1,4 +1,6 @@
 ﻿using Injectors;
+using Injectors.Loggers;
+
 Console.WriteLine("Start");
-new ConsoleStopWatchInjector().Run(@"..\..\..\..\Dummy\bin\debug\net6.0\Dummy.dll");
+new Injector<StopWatchInjector,ConsoleLogger>().Build(@"..\..\..\..\Dummy\bin\debug\net6.0\Dummy.dll");
 Console.WriteLine("End");

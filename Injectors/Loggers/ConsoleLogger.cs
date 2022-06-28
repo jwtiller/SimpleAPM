@@ -7,13 +7,8 @@ using System.Threading.Tasks;
 
 namespace Injectors.Loggers
 {
-    public class ConsoleLogger
+    public class ConsoleLogger : ILogger
     {
-        private readonly ModuleDefinition _module;
-        public ConsoleLogger(ModuleDefinition module)
-        {
-            _module = module;
-        }
-        public MethodReference Reference => _module.ImportReference(typeof(Console).GetMethod(nameof(Console.WriteLine), new[] { typeof(string), typeof(object) }));
+        public MethodReference Reference(ModuleDefinition module) => module.ImportReference(typeof(Console).GetMethod(nameof(Console.WriteLine), new[] { typeof(string), typeof(object) }));
     }
 }
